@@ -67,13 +67,23 @@ section[hidden]{display:none}
 }
 .card-inner{position:relative; width:100%; min-height:300px; transition:transform .45s ease; transform-style:preserve-3d}
 .card.flipped .card-inner{transform:rotateY(180deg)}
+.card.flipped .face.front, .card:not(.flipped) .face.back{pointer-events:none}
 .face{
   position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
   background:var(--surface); border:3px solid var(--line); border-radius:22px;
   display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center;
 }
 .face.front .tag{font-size:clamp(1.6rem,6vw,2.3rem)}
-.face.front small{margin-top:18px; color:var(--muted)}
+.face.front small{margin-top:14px; color:var(--muted)}
+.say{
+  font:inherit; font-weight:700; cursor:pointer; margin-top:18px;
+  border:2px solid var(--sea); background:var(--surface); color:var(--sea-deep);
+  border-radius:999px; padding:.2em 1em; font-size:1rem;
+}
+.say.speaking{background:var(--yellow); border-color:var(--yellow); color:#11323A}
+.back-head{display:flex; align-items:center; gap:12px; margin:0 0 6px}
+.back-head h3{margin:0}
+.back-head .say{margin-top:0; padding:.1em .6em}
 .face.back{transform:rotateY(180deg); align-items:flex-start; text-align:left; border-color:var(--sea)}
 .face.back h3{margin:0 0 6px; font-size:1.5rem; color:var(--sea-deep)}
 .face.back .def{font-size:1.2rem; margin:0 0 12px}
@@ -152,19 +162,19 @@ section[hidden]{display:none}
 
   <!-- CARDS -->
   <section id="cards">
-    <p class="hint">Tap the card to see what the word means. Use the arrows for the next word.</p>
+    <p class="hint">Tap 🔊 to hear the word. Tap the card to see what it means. Use the arrows for the next word.</p>
     <div class="deck">
-      <button class="card" id="card" aria-live="polite">
+      <div class="card" id="card" role="button" tabindex="0" aria-label="Flashcard, tap to turn over">
         <div class="card-inner">
-          <div class="face front"><div id="cardFront"></div><small>Tap to turn over</small></div>
+          <div class="face front"><div id="cardFront"></div><button class="say" data-say="front" aria-label="Listen to the word">🔊 Listen</button><small>Tap to turn over</small></div>
           <div class="face back">
-            <h3 id="cardWord"></h3>
+            <div class="back-head"><h3 id="cardWord"></h3><button class="say" data-say="back" aria-label="Listen to the word">🔊</button></div>
             <p class="def" id="cardDef"></p>
             <p class="ex" id="cardEx"></p>
             <p class="form" id="cardForm"></p>
           </div>
         </div>
-      </button>
+      </div>
       <div class="deck-ctrl">
         <button class="round" id="prev" aria-label="Previous word">&#8249;</button>
         <span class="count" id="count"></span>
@@ -241,7 +251,28 @@ function showCard(){
   document.getElementById('cardForm').textContent = o.f || '';
   document.getElementById('count').textContent = (idx+1) + ' / ' + deck.length;
 }
+/* audio: browser speech synthesis, British English voice preferred (Super Minds is British English) */
+let voice = null;
+function pickVoice(){
+  const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [];
+  voice = vs.find(v=>v.lang==='en-GB') || vs.find(v=>/^en[-_]GB/i.test(v.lang)) || vs.find(v=>/^en/i.test(v.lang)) || null;
+}
+if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function say(text, btn){
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = voice ? voice.lang : 'en-GB'; if(voice) u.voice = voice; u.rate = 0.85;
+  if(btn){ btn.classList.add('speaking'); u.onend = u.onerror = ()=>btn.classList.remove('speaking'); }
+  speechSynthesis.speak(u);
+}
+document.querySelectorAll('.say').forEach(b=>{
+  if(!('speechSynthesis' in window)) { b.hidden = true; return; }
+  b.addEventListener('click',e=>{ e.stopPropagation(); say(deck[idx].w, b); });
+  b.addEventListener('keydown',e=>e.stopPropagation());
+});
 card.addEventListener('click',()=>card.classList.toggle('flipped'));
+card.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); card.classList.toggle('flipped'); } });
 document.getElementById('prev').addEventListener('click',()=>{idx=(idx-1+deck.length)%deck.length; showCard();});
 document.getElementById('next').addEventListener('click',()=>{idx=(idx+1)%deck.length; showCard();});
 document.getElementById('shuffleCards').addEventListener('click',()=>{deck=shuffle(WORDS); idx=0; showCard();});
