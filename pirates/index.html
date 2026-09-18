@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Super Minds 6 Unit 1: The treasure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E4F3F1; --surface:#FFFFFF; --ink:#11323A; --muted:#4E6A70;
+  --sea:#0F6E78; --sea-deep:#0B4F57; --yellow:#FFC400; --yellow-soft:#FFE58A;
+  --ok:#2B8A3E; --ok-bg:#DDF5E2; --bad:#D6452B; --bad-bg:#FDE3DD; --line:#BFDCD8;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C2226; --surface:#133238; --ink:#EAF6F4; --muted:#A5C3C6;
+    --sea:#3BB3BC; --sea-deep:#7FD6DC; --yellow:#FFC400; --yellow-soft:#6B5A12;
+    --ok:#6FD68A; --ok-bg:#163D24; --bad:#FF8A72; --bad-bg:#4A1E16; --line:#24505A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C2226; --surface:#133238; --ink:#EAF6F4; --muted:#A5C3C6;
+  --sea:#3BB3BC; --sea-deep:#7FD6DC; --yellow:#FFC400; --yellow-soft:#6B5A12;
+  --ok:#6FD68A; --ok-bg:#163D24; --bad:#FF8A72; --bad-bg:#4A1E16; --line:#24505A;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Baloo 2", "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  font-size:18px; line-height:1.45;
+}
+.wrap{max-width:860px; margin:0 auto; padding:24px 16px 56px}
+header h1{margin:0; font-size:clamp(1.9rem,5vw,2.6rem); line-height:1.1; font-weight:800}
+header p{margin:.25rem 0 0; color:var(--muted)}
+
+/* yellow book-style tag */
+.tag{display:inline-flex; align-items:center; gap:.5rem}
+.tag .num{
+  width:2.1em; height:2.1em; border-radius:50%; flex:none;
+  background:#fff; color:#11323A; border:4px solid var(--yellow);
+  display:grid; place-items:center; font-weight:800; font-size:.9em;
+  position:relative; z-index:1;
+}
+.tag .lbl{background:var(--yellow); color:#11323A; padding:.05em .7em .05em .9em; margin-left:-1.2em; border-radius:0 8px 8px 0; font-weight:700}
+.tag .ul{font-weight:700; border-bottom:4px solid #6BDB4F; padding:0 .1em}
+
+nav{display:flex; gap:8px; margin:22px 0 18px; flex-wrap:wrap}
+nav button{
+  font:inherit; font-weight:700; font-size:1.05rem; cursor:pointer;
+  border:2px solid var(--sea); background:transparent; color:var(--sea-deep);
+  padding:.35em 1.1em; border-radius:999px;
+}
+nav button[aria-selected="true"]{background:var(--sea); color:#fff}
+button:focus-visible, input:focus-visible, .card:focus-visible{outline:3px solid var(--yellow); outline-offset:3px}
+
+section[hidden]{display:none}
+.hint{color:var(--muted); margin:0 0 14px}
+
+/* cards */
+.deck{display:flex; flex-direction:column; align-items:center; gap:16px}
+.card{
+  width:min(100%,520px); min-height:300px; perspective:1200px; cursor:pointer;
+  border:none; background:none; padding:0; font:inherit; color:inherit;
+}
+.card-inner{position:relative; width:100%; min-height:300px; transition:transform .45s ease; transform-style:preserve-3d}
+.card.flipped .card-inner{transform:rotateY(180deg)}
+.face{
+  position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  background:var(--surface); border:3px solid var(--line); border-radius:22px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center;
+}
+.face.front .tag{font-size:clamp(1.6rem,6vw,2.3rem)}
+.face.front small{margin-top:18px; color:var(--muted)}
+.face.back{transform:rotateY(180deg); align-items:flex-start; text-align:left; border-color:var(--sea)}
+.face.back h3{margin:0 0 6px; font-size:1.5rem; color:var(--sea-deep)}
+.face.back .def{font-size:1.2rem; margin:0 0 12px}
+.face.back .ex{margin:0; color:var(--muted); font-style:italic}
+.face.back .form{margin:10px 0 0; font-size:.95rem; color:var(--muted)}
+.deck-ctrl{display:flex; align-items:center; gap:14px}
+.round{
+  font:inherit; font-weight:800; font-size:1.3rem; width:52px; height:52px; border-radius:50%;
+  border:2px solid var(--sea); background:var(--surface); color:var(--sea-deep); cursor:pointer;
+}
+.count{min-width:70px; text-align:center; font-weight:700}
+.btn{
+  font:inherit; font-weight:700; cursor:pointer; border-radius:12px; padding:.4em 1.1em;
+  border:2px solid var(--sea); background:var(--sea); color:#fff;
+}
+.btn.ghost{background:transparent; color:var(--sea-deep)}
+
+/* match */
+.match-top{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px}
+.score{font-weight:700}
+.cols{display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:12px}
+.col{display:flex; flex-direction:column; gap:10px}
+.tile{
+  font:inherit; text-align:left; cursor:pointer; color:var(--ink);
+  background:var(--surface); border:2px solid var(--line); border-radius:14px; padding:.55em .8em; line-height:1.3;
+}
+.tile.word{font-weight:700}
+.tile.sel{border-color:var(--yellow); background:var(--yellow-soft)}
+.tile.done{border-color:var(--ok); background:var(--ok-bg); cursor:default; opacity:.75}
+.tile.wrong{border-color:var(--bad); background:var(--bad-bg); animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.banner{margin-top:16px; padding:14px 16px; border-radius:14px; background:var(--ok-bg); border:2px solid var(--ok); font-weight:700; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
+
+/* context */
+.part{background:var(--surface); border:2px solid var(--line); border-radius:20px; padding:18px; margin-bottom:18px}
+.part h3{margin:0 0 10px}
+.bank{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px}
+.chip{
+  font:inherit; font-weight:700; cursor:pointer; border-radius:999px; padding:.1em .8em;
+  background:var(--yellow); color:#11323A; border:2px solid var(--yellow);
+}
+.chip.used{background:transparent; color:var(--muted); border-color:var(--line); text-decoration:line-through}
+.story{font-size:1.15rem; line-height:2.1; margin:0}
+.gap{
+  font:inherit; font-weight:700; color:var(--ink); background:var(--bg);
+  border:none; border-bottom:3px solid var(--sea); border-radius:6px 6px 0 0;
+  padding:0 .3em; text-align:center; max-width:100%;
+}
+.gap.ok{background:var(--ok-bg); border-color:var(--ok)}
+.gap.bad{background:var(--bad-bg); border-color:var(--bad)}
+.part-ctrl{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:14px}
+.result{font-weight:700}
+
+@media (max-width:560px){
+  .cols{grid-template-columns:1fr 1fr; gap:8px}
+  .tile{font-size:.95rem; padding:.45em .6em}
+}
+@media (prefers-reduced-motion: reduce){
+  .card-inner{transition:none}
+  .tile.wrong{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p>Super Minds 6, Unit 1 Pirates</p>
+    <h1>The treasure</h1>
+  </header>
+
+  <nav role="tablist">
+    <button role="tab" aria-selected="true" data-tab="cards">Cards</button>
+    <button role="tab" aria-selected="false" data-tab="match">Match</button>
+    <button role="tab" aria-selected="false" data-tab="context">Fill in</button>
+  </nav>
+
+  <!-- CARDS -->
+  <section id="cards">
+    <p class="hint">Tap the card to see what the word means. Use the arrows for the next word.</p>
+    <div class="deck">
+      <button class="card" id="card" aria-live="polite">
+        <div class="card-inner">
+          <div class="face front"><div id="cardFront"></div><small>Tap to turn over</small></div>
+          <div class="face back">
+            <h3 id="cardWord"></h3>
+            <p class="def" id="cardDef"></p>
+            <p class="ex" id="cardEx"></p>
+            <p class="form" id="cardForm"></p>
+          </div>
+        </div>
+      </button>
+      <div class="deck-ctrl">
+        <button class="round" id="prev" aria-label="Previous word">&#8249;</button>
+        <span class="count" id="count"></span>
+        <button class="round" id="next" aria-label="Next word">&#8250;</button>
+      </div>
+      <button class="btn ghost" id="shuffleCards">Mix the cards</button>
+    </div>
+  </section>
+
+  <!-- MATCH -->
+  <section id="match" hidden>
+    <div class="match-top">
+      <p class="hint" style="margin:0">Tap a word, then tap its meaning.</p>
+      <span class="score" id="matchScore"></span>
+    </div>
+    <div class="cols">
+      <div class="col" id="colWords"></div>
+      <div class="col" id="colDefs"></div>
+    </div>
+    <div id="matchDone"></div>
+  </section>
+
+  <!-- CONTEXT -->
+  <section id="context" hidden>
+    <p class="hint">Read the story. Type the missing words or tap a gap and then a word from the box.</p>
+    <div id="parts"></div>
+  </section>
+</div>
+
+<script>
+const WORDS = [
+  {w:"palm tree", n:1, d:"A tall tree with no branches and big leaves at the top. It grows in hot places, often near the beach.", s:"a tall tree with big leaves at the top", ex:"We sat under a palm tree on the beach."},
+  {w:"hook", n:2, d:"A curved piece of metal. Some pirates have a hook instead of a hand.", s:"a curved piece of metal instead of a hand", ex:"The captain lost his hand, so now he has a hook."},
+  {w:"eye-patch", n:3, d:"A small piece of cloth that you wear over one eye.", s:"you wear it over one eye", ex:"The pirate wears a black eye-patch."},
+  {w:"binoculars", n:4, d:"You look through them to see things that are far away.", s:"you use them to see things far away", ex:"Look through the binoculars! I can see a ship!"},
+  {w:"key", n:5, d:"A small piece of metal. You use it to open a door, a box or a lock.", s:"it opens a door or a lock", ex:"We need the key to open the treasure chest."},
+  {w:"hammock", n:6, d:"A bed made of cloth or rope. It hangs between two trees or posts.", s:"a bed that hangs between two trees", ex:"Grandpa is sleeping in the hammock in the garden."},
+  {w:"coins", n:7, d:"Small, round pieces of metal. They are money.", s:"round pieces of metal money", ex:"The box is full of gold coins."},
+  {w:"spade", n:8, d:"A tool with a long handle. You use it to dig holes in the ground.", s:"a tool for digging", ex:"Give me the spade. Let's dig here!"},
+  {w:"treasure chest", n:9, d:"A big, strong box. Pirates keep gold, coins and jewels in it.", s:"a big box for gold and jewels", ex:"The pirates hid the treasure chest on the island."},
+  {w:"hole", n:10, d:"An empty space in the ground or in something.", s:"an empty space in the ground", ex:"The dog dug a big hole in the garden."},
+  {w:"stone", n:11, d:"A small piece of rock.", s:"a small piece of rock", ex:"He threw a stone into the sea."},
+  {w:"jewels", d:"Beautiful and expensive stones, for example diamonds.", s:"beautiful, expensive stones like diamonds", ex:"The queen's crown has lots of jewels."},
+  {w:"anchors", d:"Heavy metal things. Sailors drop them into the water so the ship doesn't move.", s:"heavy metal things that stop a ship moving", ex:"The sailors dropped the anchor near the beach.", f:"one anchor, two anchors"},
+  {w:"keep", d:"To have something and not give it back or sell it.", s:"to have something and not give it back", ex:"You can keep this book. It's a present!", f:"keep, kept (past)"},
+  {w:"captured", d:"Caught a person, an animal or a ship and took it away.", s:"caught and took something away", ex:"The pirates captured a big ship.", f:"capture, captured (past)"},
+  {w:"on other occasions", d:"At other times.", s:"at other times", ex:"Sometimes I walk to school. On other occasions, I go by bus."}
+];
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function tagHTML(o){
+  return o.n ? `<span class="tag"><span class="num">${o.n}</span><span class="lbl">${o.w}</span></span>`
+             : `<span class="tag"><span class="ul">${o.w}</span></span>`;
+}
+
+/* tabs */
+document.querySelectorAll('nav button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected', x===b));
+    ['cards','match','context'].forEach(id=>document.getElementById(id).hidden = id!==b.dataset.tab);
+  });
+});
+
+/* cards */
+let deck = WORDS.slice(), idx = 0;
+const card = document.getElementById('card');
+function showCard(){
+  const o = deck[idx];
+  card.classList.remove('flipped');
+  document.getElementById('cardFront').innerHTML = tagHTML(o);
+  document.getElementById('cardWord').textContent = o.w;
+  document.getElementById('cardDef').textContent = o.d;
+  document.getElementById('cardEx').textContent = o.ex;
+  document.getElementById('cardForm').textContent = o.f || '';
+  document.getElementById('count').textContent = (idx+1) + ' / ' + deck.length;
+}
+card.addEventListener('click',()=>card.classList.toggle('flipped'));
+document.getElementById('prev').addEventListener('click',()=>{idx=(idx-1+deck.length)%deck.length; showCard();});
+document.getElementById('next').addEventListener('click',()=>{idx=(idx+1)%deck.length; showCard();});
+document.getElementById('shuffleCards').addEventListener('click',()=>{deck=shuffle(WORDS); idx=0; showCard();});
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('cards').hidden) return;
+  if(e.key==='ArrowRight') document.getElementById('next').click();
+  if(e.key==='ArrowLeft') document.getElementById('prev').click();
+});
+showCard();
+
+/* match: two rounds of 8 */
+let rounds=[], round=0, selWord=null, selDef=null, matched=0, mistakes=0;
+function newMatch(){
+  const all = shuffle(WORDS);
+  rounds = [all.slice(0,8), all.slice(8)];
+  round = 0; mistakes = 0; startRound();
+}
+function startRound(){
+  matched = 0; selWord = selDef = null;
+  const set = rounds[round];
+  const cw = document.getElementById('colWords'), cd = document.getElementById('colDefs');
+  cw.innerHTML=''; cd.innerHTML=''; document.getElementById('matchDone').innerHTML='';
+  shuffle(set).forEach(o=>{
+    const t=document.createElement('button'); t.className='tile word'; t.textContent=o.w; t.dataset.key=o.w;
+    t.onclick=()=>pick(t,'w'); cw.appendChild(t);
+  });
+  shuffle(set).forEach(o=>{
+    const t=document.createElement('button'); t.className='tile'; t.textContent=o.s; t.dataset.key=o.w;
+    t.onclick=()=>pick(t,'d'); cd.appendChild(t);
+  });
+  updateScore();
+}
+function updateScore(){
+  document.getElementById('matchScore').textContent = `Round ${round+1} of 2: ${matched} / ${rounds[round].length}`;
+}
+function pick(t,type){
+  if(t.classList.contains('done')) return;
+  if(type==='w'){ if(selWord) selWord.classList.remove('sel'); selWord=t; }
+  else { if(selDef) selDef.classList.remove('sel'); selDef=t; }
+  t.classList.add('sel');
+  if(selWord && selDef){
+    const a=selWord, b=selDef; selWord=selDef=null;
+    a.classList.remove('sel'); b.classList.remove('sel');
+    if(a.dataset.key===b.dataset.key){
+      a.classList.add('done'); b.classList.add('done'); a.disabled=b.disabled=true; matched++; updateScore();
+      if(matched===rounds[round].length) roundDone();
+    } else {
+      mistakes++;
+      a.classList.add('wrong'); b.classList.add('wrong');
+      setTimeout(()=>{a.classList.remove('wrong'); b.classList.remove('wrong');},450);
+    }
+  }
+}
+function roundDone(){
+  const box=document.getElementById('matchDone');
+  if(round===0){
+    box.innerHTML=`<div class="banner"><span>Round 1 done! Well done!</span><button class="btn" id="nextRound">Next round</button></div>`;
+    document.getElementById('nextRound').onclick=()=>{round=1; startRound();};
+  } else {
+    box.innerHTML=`<div class="banner"><span>All 16 words matched! Mistakes: ${mistakes}</span><button class="btn" id="again">Play again</button></div>`;
+    document.getElementById('again').onclick=newMatch;
+  }
+}
+newMatch();
+
+/* context */
+const PARTS = [
+  {title:"Part 1: The captured ship",
+   text:"Captain Redbeard stood on his ship and looked through his [binoculars]. He had a [hook] instead of his left hand and a black [eye-patch] over one eye. Yesterday his pirates [captured] a big ship. On it they found gold [coins], beautiful [jewels] and two heavy [anchors]. \"Let's hide the treasure on the island with the tall [palm tree]!\" said the captain."},
+  {title:"Part 2: On the island",
+   text:"The pirates put everything into a big [treasure chest]. One pirate took a [spade] and dug a deep [hole] in the sand. They put the chest inside and put a big [stone] on top. The captain locked the chest and hid the [key] in his boot. Then he lay down in his [hammock] between two trees. \"Sometimes we sell our treasure,\" he said. \"[On other occasions], we [keep] it for ourselves!\""}
+];
+const norm = s => s.toLowerCase().replace(/[\u2010-\u2015]/g,'-').replace(/\s*-\s*/g,'-').replace(/\s+/g,' ').trim();
+function variants(ans){ const a=norm(ans); return [a, a.replace(/-/g,' ')]; }
+
+let lastGap = null;
+function buildContext(){
+  const host=document.getElementById('parts'); host.innerHTML='';
+  PARTS.forEach((p,pi)=>{
+    const answers=[]; 
+    const html = p.text.replace(/\[([^\]]+)\]/g,(m,ans)=>{
+      answers.push(ans);
+      const w = Math.max(ans.length, 5) + 2;
+      return `<input class="gap" data-ans="${ans}" style="width:${w}ch" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="missing word">`;
+    });
+    const div=document.createElement('div'); div.className='part';
+    div.innerHTML = `<h3>${p.title}</h3><div class="bank"></div><p class="story">${html}</p>
+      <div class="part-ctrl"><button class="btn check">Check</button><button class="btn ghost reset">Start again</button><span class="result"></span></div>`;
+    const bank=div.querySelector('.bank');
+    shuffle(answers).forEach(a=>{
+      const c=document.createElement('button'); c.className='chip'; c.textContent=a; c.dataset.word=a;
+      c.onclick=()=>{
+        const target = (lastGap && div.contains(lastGap) && !lastGap.classList.contains('ok')) ? lastGap
+          : [...div.querySelectorAll('.gap')].find(g=>!g.value && !g.classList.contains('ok'));
+        if(!target) return;
+        target.value=a; target.classList.remove('bad'); refreshBank(div); target.focus();
+      };
+      bank.appendChild(c);
+    });
+    div.querySelectorAll('.gap').forEach(g=>{
+      g.addEventListener('focus',()=>lastGap=g);
+      g.addEventListener('input',()=>{g.classList.remove('bad'); refreshBank(div);});
+    });
+    div.querySelector('.check').onclick=()=>{
+      let ok=0; const gaps=div.querySelectorAll('.gap');
+      gaps.forEach(g=>{
+        const good = variants(g.dataset.ans).includes(norm(g.value));
+        g.classList.toggle('ok',good); g.classList.toggle('bad',!good && g.value.trim()!=='');
+        if(good){ g.value=g.dataset.ans; g.readOnly=true; ok++; }
+      });
+      refreshBank(div);
+      div.querySelector('.result').textContent = ok===gaps.length ? `All ${ok} correct!` : `${ok} / ${gaps.length} correct. Fix the red words.`;
+    };
+    div.querySelector('.reset').onclick=()=>{
+      div.querySelectorAll('.gap').forEach(g=>{g.value=''; g.readOnly=false; g.classList.remove('ok','bad');});
+      div.querySelector('.result').textContent=''; refreshBank(div);
+    };
+    host.appendChild(div);
+  });
+}
+function refreshBank(div){
+  const used = [...div.querySelectorAll('.gap')].map(g=>norm(g.value));
+  div.querySelectorAll('.chip').forEach(c=>c.classList.toggle('used', used.includes(norm(c.dataset.word))));
+}
+buildContext();
+</script>
+</body>
+</html>
