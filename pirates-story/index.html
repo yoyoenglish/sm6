@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+<meta charset="UTF-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Super Minds 6 Unit 1: Story words</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E4F3F1; --surface:#FFFFFF; --ink:#11323A; --muted:#4E6A70;
+  --sea:#0F6E78; --sea-deep:#0B4F57; --yellow:#FFC400; --yellow-soft:#FFE58A;
+  --ok:#2B8A3E; --ok-bg:#DDF5E2; --bad:#D6452B; --bad-bg:#FDE3DD; --line:#BFDCD8;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C2226; --surface:#133238; --ink:#EAF6F4; --muted:#A5C3C6;
+    --sea:#3BB3BC; --sea-deep:#7FD6DC; --yellow:#FFC400; --yellow-soft:#6B5A12;
+    --ok:#6FD68A; --ok-bg:#163D24; --bad:#FF8A72; --bad-bg:#4A1E16; --line:#24505A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C2226; --surface:#133238; --ink:#EAF6F4; --muted:#A5C3C6;
+  --sea:#3BB3BC; --sea-deep:#7FD6DC; --yellow:#FFC400; --yellow-soft:#6B5A12;
+  --ok:#6FD68A; --ok-bg:#163D24; --bad:#FF8A72; --bad-bg:#4A1E16; --line:#24505A;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Baloo 2", "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  font-size:18px; line-height:1.45;
+}
+.wrap{max-width:860px; margin:0 auto; padding:24px 16px 56px}
+header h1{margin:0; font-size:clamp(1.9rem,5vw,2.6rem); line-height:1.1; font-weight:800}
+header p{margin:.25rem 0 0; color:var(--muted)}
+
+/* yellow book-style tag */
+.tag{display:inline-flex; align-items:center; gap:.5rem}
+.tag .num{
+  width:2.1em; height:2.1em; border-radius:50%; flex:none;
+  background:#fff; color:#11323A; border:4px solid var(--yellow);
+  display:grid; place-items:center; font-weight:800; font-size:.9em;
+  position:relative; z-index:1;
+}
+.tag .lbl{background:var(--yellow); color:#11323A; padding:.05em .7em .05em .9em; margin-left:-1.2em; border-radius:0 8px 8px 0; font-weight:700}
+.tag .ul{font-weight:700; border-bottom:4px solid #6BDB4F; padding:0 .1em}
+
+nav{display:flex; gap:8px; margin:22px 0 18px; flex-wrap:wrap}
+nav button{
+  font:inherit; font-weight:700; font-size:1.05rem; cursor:pointer;
+  border:2px solid var(--sea); background:transparent; color:var(--sea-deep);
+  padding:.35em 1.1em; border-radius:999px;
+}
+nav button[aria-selected="true"]{background:var(--sea); color:#fff}
+button:focus-visible, input:focus-visible, .card:focus-visible{outline:3px solid var(--yellow); outline-offset:3px}
+
+section[hidden]{display:none}
+.hint{color:var(--muted); margin:0 0 14px}
+
+/* cards */
+.deck{display:flex; flex-direction:column; align-items:center; gap:16px}
+.card{
+  width:min(100%,520px); min-height:300px; perspective:1200px; cursor:pointer;
+  border:none; background:none; padding:0; font:inherit; color:inherit;
+}
+.card-inner{position:relative; width:100%; min-height:300px; transition:transform .45s ease; transform-style:preserve-3d}
+.card.flipped .card-inner{transform:rotateY(180deg)}
+.card.flipped .face.front, .card:not(.flipped) .face.back{pointer-events:none}
+.face{
+  position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  background:var(--surface); border:3px solid var(--line); border-radius:22px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center;
+}
+.face.front .tag{font-size:clamp(1.6rem,6vw,2.3rem)}
+.face.front small{margin-top:14px; color:var(--muted)}
+.say{
+  font:inherit; font-weight:700; cursor:pointer; margin-top:18px;
+  border:2px solid var(--sea); background:var(--surface); color:var(--sea-deep);
+  border-radius:999px; padding:.2em 1em; font-size:1rem;
+}
+.say.speaking{background:var(--yellow); border-color:var(--yellow); color:#11323A}
+.back-head{display:flex; align-items:center; gap:12px; margin:0 0 6px}
+.back-head h3{margin:0}
+.back-head .say{margin-top:0; padding:.1em .6em}
+.face.back{transform:rotateY(180deg); align-items:flex-start; text-align:left; border-color:var(--sea)}
+.face.back h3{margin:0 0 6px; font-size:1.5rem; color:var(--sea-deep)}
+.face.back .def{font-size:1.2rem; margin:0 0 12px}
+.face.back .ex{margin:0; color:var(--muted); font-style:italic}
+.face.back .form{margin:10px 0 0; font-size:.95rem; color:var(--muted)}
+.deck-ctrl{display:flex; align-items:center; gap:14px}
+.round{
+  font:inherit; font-weight:800; font-size:1.3rem; width:52px; height:52px; border-radius:50%;
+  border:2px solid var(--sea); background:var(--surface); color:var(--sea-deep); cursor:pointer;
+}
+.count{min-width:70px; text-align:center; font-weight:700}
+.btn{
+  font:inherit; font-weight:700; cursor:pointer; border-radius:12px; padding:.4em 1.1em;
+  border:2px solid var(--sea); background:var(--sea); color:#fff;
+}
+.btn.ghost{background:transparent; color:var(--sea-deep)}
+
+/* match */
+.match-top{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px}
+.score{font-weight:700}
+.cols{display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:12px}
+.col{display:flex; flex-direction:column; gap:10px}
+.tile{
+  font:inherit; text-align:left; cursor:pointer; color:var(--ink);
+  background:var(--surface); border:2px solid var(--line); border-radius:14px; padding:.55em .8em; line-height:1.3;
+}
+.tile.word{font-weight:700}
+.tile.sel{border-color:var(--yellow); background:var(--yellow-soft)}
+.tile.done{border-color:var(--ok); background:var(--ok-bg); cursor:default; opacity:.75}
+.tile.wrong{border-color:var(--bad); background:var(--bad-bg); animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.banner{margin-top:16px; padding:14px 16px; border-radius:14px; background:var(--ok-bg); border:2px solid var(--ok); font-weight:700; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
+
+/* context */
+.part{background:var(--surface); border:2px solid var(--line); border-radius:20px; padding:18px; margin-bottom:18px}
+.part h3{margin:0 0 10px}
+.bank{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px}
+.chip{
+  font:inherit; font-weight:700; cursor:pointer; border-radius:999px; padding:.1em .8em;
+  background:var(--yellow); color:#11323A; border:2px solid var(--yellow);
+}
+.chip.used{background:transparent; color:var(--muted); border-color:var(--line); text-decoration:line-through}
+.story{font-size:1.15rem; line-height:2.1; margin:0}
+.gap{
+  font:inherit; font-weight:700; color:var(--ink); background:var(--bg);
+  border:none; border-bottom:3px solid var(--sea); border-radius:6px 6px 0 0;
+  padding:0 .3em; text-align:center; max-width:100%;
+}
+.gap.ok{background:var(--ok-bg); border-color:var(--ok)}
+.gap.bad{background:var(--bad-bg); border-color:var(--bad)}
+.part-ctrl{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:14px}
+.result{font-weight:700}
+.fb{margin:12px 0 0; padding:10px 14px; border-radius:12px; border:2px solid var(--line); background:var(--surface); font-weight:600; min-height:1em}
+.fb:empty{display:none}
+.fb.ok{border-color:var(--ok); background:var(--ok-bg)}
+.fb.bad{border-color:var(--bad); background:var(--bad-bg)}
+.fb ul{margin:6px 0 0; padding-left:1.2em}
+.fb li{margin:4px 0}
+
+@media (max-width:560px){
+  .cols{grid-template-columns:1fr 1fr; gap:8px}
+  .tile{font-size:.95rem; padding:.45em .6em}
+}
+@media (prefers-reduced-motion: reduce){
+  .card-inner{transition:none}
+  .tile.wrong{animation:none}
+}
+</style>
+</head>
+<body class="notranslate">
+<div class="wrap">
+  <header>
+    <p>Super Minds 6, Unit 1 Pirates</p>
+    <h1>Story words</h1>
+  </header>
+
+  <nav role="tablist">
+    <button role="tab" aria-selected="true" data-tab="cards">Cards</button>
+    <button role="tab" aria-selected="false" data-tab="match">Match</button>
+    <button role="tab" aria-selected="false" data-tab="context">Fill in</button>
+  </nav>
+
+  <!-- CARDS -->
+  <section id="cards">
+    <p class="hint">Tap 🔊 to hear the word. Tap the card to see what it means. Use the arrows for the next word.</p>
+    <div class="deck">
+      <div class="card" id="card" role="button" tabindex="0" aria-label="Flashcard, tap to turn over">
+        <div class="card-inner">
+          <div class="face front"><div id="cardFront"></div><button class="say" data-say="front" aria-label="Listen to the word">🔊 Listen</button><small>Tap to turn over</small></div>
+          <div class="face back">
+            <div class="back-head"><h3 id="cardWord"></h3><button class="say" data-say="back" aria-label="Listen to the word">🔊</button></div>
+            <p class="def" id="cardDef"></p>
+            <p class="ex" id="cardEx"></p>
+            <p class="form" id="cardForm"></p>
+          </div>
+        </div>
+      </div>
+      <div class="deck-ctrl">
+        <button class="round" id="prev" aria-label="Previous word">&#8249;</button>
+        <span class="count" id="count"></span>
+        <button class="round" id="next" aria-label="Next word">&#8250;</button>
+      </div>
+      <button class="btn ghost" id="shuffleCards">Mix the cards</button>
+    </div>
+  </section>
+
+  <!-- MATCH -->
+  <section id="match" hidden>
+    <div class="match-top">
+      <p class="hint" style="margin:0">Tap a word, then tap its meaning.</p>
+      <span class="score" id="matchScore"></span>
+    </div>
+    <div class="fb" id="matchFb" aria-live="polite"></div>
+    <div class="cols">
+      <div class="col" id="colWords"></div>
+      <div class="col" id="colDefs"></div>
+    </div>
+    <div id="matchDone"></div>
+  </section>
+
+  <!-- CONTEXT -->
+  <section id="context" hidden>
+    <p class="hint">Read the story. Type the missing words or tap a gap and then a word from the box.</p>
+    <div id="parts"></div>
+  </section>
+</div>
+
+<script>
+const WORDS = [
+  {w:"suggest", d:"To say an idea or a plan to other people.", s:"to say an idea to other people", ex:"\u2018Let\u2019s go to the park,\u2019 Tom suggested.", f:"suggest, suggested (past)"},
+  {w:"through", d:"From one side of something to the other side.", s:"from one side to the other side", ex:"I looked through the window and saw the rain."},
+  {w:"binoculars", d:"You look through them to see things that are far away.", s:"you use them to see things far away", ex:"Look through the binoculars! I can see a ship!"},
+  {w:"sail away", d:"To leave a place on a ship or a boat.", s:"to leave on a ship or boat", ex:"The pirate ship sailed away to the south.", f:"sail away, sailed away (past)"},
+  {w:"sails", d:"Big pieces of cloth on a ship. The wind pushes them and the ship moves.", s:"big pieces of cloth on a ship", ex:"The ship has three white sails.", f:"one sail, two sails"},
+  {w:"I wonder", d:"I want to know something. I ask myself a question.", s:"I want to know; I ask myself", ex:"I wonder what\u2019s in that box."},
+  {w:"in the other direction", d:"The other way, to the opposite side.", s:"the other way", ex:"The dog ran to the left, so I looked in the other direction."},
+  {w:"crack open", d:"To break something hard so that you can open it.", s:"to break something hard to open it", ex:"Dad cracked open a coconut for us.", f:"crack open, cracked open (past)"},
+  {w:"dig up", d:"To take something out of the ground by digging.", s:"to take something out of the ground", ex:"They dug up the treasure chest.", f:"dig up, dug up (past)"},
+  {w:"pull out", d:"To take something out of a place, often with effort.", s:"to take something out of a place", ex:"She opened her bag and pulled out a book.", f:"pull out, pulled out (past)"},
+  {w:"arrive on a boat", d:"To come to a place by boat.", s:"to come to a place by boat", ex:"Lots of families arrived on a boat.", f:"arrive, arrived (past)"},
+  {w:"have stolen", d:"Took something that is not yours, and now it is gone.", s:"took something that isn\u2019t yours", ex:"Pirates have stolen our gold coins!", f:"steal, stole, stolen"},
+  {w:"fetch", d:"To go and get something and bring it back.", s:"to go, get something and bring it back", ex:"Can you fetch my bag, please?", f:"fetch, fetched (past)"},
+  {w:"load onto", d:"To put things onto a boat, a car or a lorry.", s:"to put things onto a boat or a car", ex:"The men loaded the chest onto the boat.", f:"load, loaded (past)"},
+  {w:"lie down", d:"To put your body flat, for example on a bed or on the sand.", s:"to put your body flat to rest", ex:"When it was dark, they lay down on the sand.", f:"lie down, lay down (past)"},
+  {w:"bury", d:"To put something in a hole in the ground and cover it.", s:"to put something in the ground and cover it", ex:"Where did the pirates bury the treasure?", f:"bury, buried (past)"},
+  {w:"grab", d:"To take something or someone quickly and strongly with your hand.", s:"to take something quickly and strongly", ex:"The man grabbed my arm.", f:"grab, grabbed (past)"},
+  {w:"cover with", d:"To put something over another thing so that you can\u2019t see it.", s:"to put something over another thing", ex:"We covered Dad\u2019s feet with sand.", f:"cover, covered (past)"}
+];
+
+const RU = {
+ "suggest": {
+  "ru": "Предложить идею или план — сказать другим: «Давайте…».",
+  "r": "предложить (идею)",
+  "fr": "suggest — предлагать, suggested — предложил (прошедшее время)",
+  "forms": [
+   "suggest",
+   "suggests",
+   "suggesting",
+   "suggested"
+  ]
+ },
+ "through": {
+  "ru": "Сквозь, через — с одной стороны на другую. Смотреть через окно, через бинокль.",
+  "r": "сквозь, через",
+  "fr": null,
+  "forms": [
+   "through"
+  ]
+ },
+ "binoculars": {
+  "ru": "Бинокль. В английском это слово всегда во множественном числе: binoculars.",
+  "r": "бинокль",
+  "fr": null,
+  "forms": [
+   "binoculars",
+   "binocular"
+  ]
+ },
+ "sail away": {
+  "ru": "Уплыть — уйти из какого-то места на корабле или лодке.",
+  "r": "уплыть",
+  "fr": "sail away — уплывать, sailed away — уплыл (прошедшее время)",
+  "forms": [
+   "sail away",
+   "sails away",
+   "sailing away",
+   "sailed away"
+  ]
+ },
+ "sails": {
+  "ru": "Паруса — большие куски ткани на корабле. Ветер дует в них, и корабль плывёт.",
+  "r": "паруса",
+  "fr": "one sail — один парус, two sails — два паруса",
+  "forms": [
+   "sails",
+   "sail"
+  ]
+ },
+ "I wonder": {
+  "ru": "«Интересно…», «хотел бы я знать…» — так говорят, когда задают вопрос самому себе. После I wonder порядок слов прямой: I wonder who they are.",
+  "r": "интересно… (спрашиваю себя)",
+  "fr": null,
+  "forms": [
+   "i wonder"
+  ]
+ },
+ "in the other direction": {
+  "ru": "В другую сторону, в противоположном направлении.",
+  "r": "в другую сторону",
+  "fr": null,
+  "forms": [
+   "in the other direction"
+  ]
+ },
+ "crack open": {
+  "ru": "Расколоть что-то твёрдое, чтобы открыть: кокос, яйцо, орех.",
+  "r": "расколоть и открыть",
+  "fr": "crack open — раскалывать, cracked open — расколол (прошедшее время)",
+  "forms": [
+   "crack open",
+   "cracks open",
+   "cracking open",
+   "cracked open"
+  ]
+ },
+ "dig up": {
+  "ru": "Выкопать — достать что-то из земли, копая.",
+  "r": "выкопать",
+  "fr": "dig up — выкапывать, dug up — выкопал (неправильный глагол: dig – dug – dug)",
+  "forms": [
+   "dig up",
+   "digs up",
+   "digging up",
+   "dug up"
+  ]
+ },
+ "pull out": {
+  "ru": "Вытащить, достать что-то откуда-то (часто с усилием).",
+  "r": "вытащить",
+  "fr": "pull out — вытаскивать, pulled out — вытащил (прошедшее время)",
+  "forms": [
+   "pull out",
+   "pulls out",
+   "pulling out",
+   "pulled out"
+  ]
+ },
+ "arrive on a boat": {
+  "ru": "Прибыть, приплыть на лодке.",
+  "r": "прибыть на лодке",
+  "fr": "arrive — прибывать, arrived — прибыл (прошедшее время)",
+  "forms": [
+   "arrive",
+   "arrives",
+   "arriving",
+   "arrived"
+  ]
+ },
+ "have stolen": {
+  "ru": "Украли — взяли чужое, и теперь этого нет. Это Present Perfect от глагола steal.",
+  "r": "украли",
+  "fr": "неправильный глагол: steal – stole – stolen",
+  "forms": [
+   "steal",
+   "steals",
+   "stealing",
+   "stole",
+   "stolen",
+   "have stolen",
+   "has stolen"
+  ]
+ },
+ "fetch": {
+  "ru": "Сходить за чем-то и принести обратно.",
+  "r": "сходить и принести",
+  "fr": "fetch — приносить, fetched — принёс (прошедшее время)",
+  "forms": [
+   "fetch",
+   "fetches",
+   "fetching",
+   "fetched"
+  ]
+ },
+ "load onto": {
+  "ru": "Погрузить на лодку, в машину или грузовик.",
+  "r": "погрузить на",
+  "fr": "load — грузить, loaded — погрузил (прошедшее время)",
+  "forms": [
+   "load",
+   "loads",
+   "loading",
+   "loaded"
+  ]
+ },
+ "lie down": {
+  "ru": "Лечь — принять горизонтальное положение, например на кровать или на песок. Внимание: прошедшее время — lay down («легли»). Не путай с lay — «класть что-то».",
+  "r": "лечь",
+  "fr": "неправильный глагол: lie – lay – lain",
+  "forms": [
+   "lie down",
+   "lies down",
+   "lying down",
+   "lay down",
+   "lain down",
+   "laid down"
+  ]
+ },
+ "bury": {
+  "ru": "Закопать, зарыть — положить в яму в земле и засыпать. Читается [ˈberi].",
+  "r": "закопать",
+  "fr": "bury — закапывать, buried — закопал (прошедшее время)",
+  "forms": [
+   "bury",
+   "buries",
+   "burying",
+   "buried"
+  ]
+ },
+ "grab": {
+  "ru": "Схватить — быстро и крепко взять рукой что-то или кого-то.",
+  "r": "схватить",
+  "fr": "grab — хватать, grabbed — схватил (прошедшее время)",
+  "forms": [
+   "grab",
+   "grabs",
+   "grabbing",
+   "grabbed"
+  ]
+ },
+ "cover with": {
+  "ru": "Накрыть или засыпать чем-то, чтобы не было видно. Cover with sand — засыпать песком.",
+  "r": "накрыть, засыпать чем-то",
+  "fr": "cover — накрывать, covered — накрыл (прошедшее время)",
+  "forms": [
+   "cover",
+   "covers",
+   "covering",
+   "covered"
+  ]
+ }
+};
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function tagHTML(o){
+  return o.n ? `<span class="tag"><span class="num">${o.n}</span><span class="lbl">${o.w}</span></span>`
+             : `<span class="tag"><span class="ul">${o.w}</span></span>`;
+}
+
+/* tabs */
+document.querySelectorAll('nav button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected', x===b));
+    ['cards','match','context'].forEach(id=>document.getElementById(id).hidden = id!==b.dataset.tab);
+  });
+});
+
+/* cards */
+let deck = WORDS.slice(), idx = 0;
+const card = document.getElementById('card');
+function showCard(){
+  const o = deck[idx];
+  card.classList.remove('flipped');
+  document.getElementById('cardFront').innerHTML = tagHTML(o);
+  document.getElementById('cardWord').textContent = o.w;
+  document.getElementById('cardDef').textContent = RU[o.w].ru;
+  document.getElementById('cardEx').textContent = o.ex;
+  document.getElementById('cardForm').textContent = RU[o.w].fr || '';
+  document.getElementById('count').textContent = (idx+1) + ' / ' + deck.length;
+}
+/* audio: browser speech synthesis, British English voice preferred (Super Minds is British English) */
+let voice = null;
+function pickVoice(){
+  const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [];
+  voice = vs.find(v=>v.lang==='en-GB') || vs.find(v=>/^en[-_]GB/i.test(v.lang)) || vs.find(v=>/^en/i.test(v.lang)) || null;
+}
+if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function say(text, btn){
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = voice ? voice.lang : 'en-GB'; if(voice) u.voice = voice; u.rate = 0.85;
+  if(btn){ btn.classList.add('speaking'); u.onend = u.onerror = ()=>btn.classList.remove('speaking'); }
+  speechSynthesis.speak(u);
+}
+document.querySelectorAll('.say').forEach(b=>{
+  if(!('speechSynthesis' in window)) { b.hidden = true; return; }
+  b.addEventListener('click',e=>{ e.stopPropagation(); say(deck[idx].w, b); });
+  b.addEventListener('keydown',e=>e.stopPropagation());
+});
+card.addEventListener('click',()=>card.classList.toggle('flipped'));
+card.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); card.classList.toggle('flipped'); } });
+document.getElementById('prev').addEventListener('click',()=>{idx=(idx-1+deck.length)%deck.length; showCard();});
+document.getElementById('next').addEventListener('click',()=>{idx=(idx+1)%deck.length; showCard();});
+document.getElementById('shuffleCards').addEventListener('click',()=>{deck=shuffle(WORDS); idx=0; showCard();});
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('cards').hidden) return;
+  if(e.key==='ArrowRight') document.getElementById('next').click();
+  if(e.key==='ArrowLeft') document.getElementById('prev').click();
+});
+showCard();
+
+/* match: two rounds of 8 */
+let rounds=[], round=0, selWord=null, selDef=null, matched=0, mistakes=0;
+function newMatch(){
+  const all = shuffle(WORDS);
+  const half=Math.ceil(all.length/2);
+  rounds = [all.slice(0,half), all.slice(half)];
+  round = 0; mistakes = 0; startRound();
+}
+function startRound(){
+  matched = 0; selWord = selDef = null;
+  const f0=document.getElementById('matchFb'); f0.className='fb'; f0.textContent='';
+  const set = rounds[round];
+  const cw = document.getElementById('colWords'), cd = document.getElementById('colDefs');
+  cw.innerHTML=''; cd.innerHTML=''; document.getElementById('matchDone').innerHTML='';
+  shuffle(set).forEach(o=>{
+    const t=document.createElement('button'); t.className='tile word'; t.textContent=o.w; t.dataset.key=o.w;
+    t.onclick=()=>pick(t,'w'); cw.appendChild(t);
+  });
+  shuffle(set).forEach(o=>{
+    const t=document.createElement('button'); t.className='tile'; t.textContent=o.s; t.dataset.key=o.w;
+    t.onclick=()=>pick(t,'d'); cd.appendChild(t);
+  });
+  updateScore();
+}
+function matchFb(ok,msg){ const f=document.getElementById('matchFb'); f.className='fb '+(ok?'ok':'bad'); f.textContent=msg; }
+function updateScore(){
+  document.getElementById('matchScore').textContent = `Round ${round+1} of 2: ${matched} / ${rounds[round].length}`;
+}
+function pick(t,type){
+  if(t.classList.contains('done')) return;
+  if(type==='w'){ if(selWord) selWord.classList.remove('sel'); selWord=t; }
+  else { if(selDef) selDef.classList.remove('sel'); selDef=t; }
+  t.classList.add('sel');
+  if(selWord && selDef){
+    const a=selWord, b=selDef; selWord=selDef=null;
+    a.classList.remove('sel'); b.classList.remove('sel');
+    if(a.dataset.key===b.dataset.key){
+      a.classList.add('done'); b.classList.add('done'); a.disabled=b.disabled=true; matched++; updateScore();
+      matchFb(true, `Верно! «${a.dataset.key}» — ${RU[a.dataset.key].r}.`);
+      if(matched===rounds[round].length) roundDone();
+    } else {
+      mistakes++;
+      matchFb(false, `Не совсем. «${a.dataset.key}» — это «${RU[a.dataset.key].r}», а выбранное объяснение подходит к слову со значением «${RU[b.dataset.key].r}». Попробуй ещё раз.`);
+      a.classList.add('wrong'); b.classList.add('wrong');
+      setTimeout(()=>{a.classList.remove('wrong'); b.classList.remove('wrong');},450);
+    }
+  }
+}
+function roundDone(){
+  const box=document.getElementById('matchDone');
+  if(round===0){
+    box.innerHTML=`<div class="banner"><span>Раунд 1 пройден! Молодец!</span><button class="btn" id="nextRound">Next round</button></div>`;
+    document.getElementById('nextRound').onclick=()=>{round=1; startRound();};
+  } else {
+    box.innerHTML=`<div class="banner"><span>Все ${WORDS.length} слов найдены! Ошибок: ${mistakes}</span><button class="btn" id="again">Play again</button></div>`;
+    document.getElementById('again').onclick=newMatch;
+  }
+}
+newMatch();
+
+/* context */
+const PARTS = [
+  {title:"Part 1: A day on the island",
+   text:"Mia and Leo were on a small island. \u2018Let\u2019s climb that rock,\u2019 Leo [suggested]. From the top, Mia looked [through] her [binoculars]. She could see a ship with big white [sails]. It was [sailing away] to the west. \u2018[I wonder] where it\u2019s going,\u2019 said Mia. Then they looked [in the other direction] and saw lots of coconut trees. Leo [cracked open] a coconut and they drank the milk. Later, Mia\u2019s dog [dug up] an old bottle in the sand."},
+  {title:"Part 2: The map",
+   text:"Leo opened the bottle and [pulled out] an old map. \u2018Look! It says: Pirates [have stolen] our gold!\u2019 The next morning, two fishermen [arrived] on a boat. The children ran and [fetched] their bags, and the men [loaded] them onto the boat. That night, Mia [lay down] on the sand and looked at the stars. \u2018Pirates [bury] their treasure on islands like this,\u2019 she said. Suddenly, a big crab [grabbed] Leo\u2019s shoe! Leo laughed and [covered] the crab with sand."}
+];
+const GAP_KEY = {"suggested":"suggest","through":"through","binoculars":"binoculars","sails":"sails","sailing away":"sail away","I wonder":"I wonder","in the other direction":"in the other direction","cracked open":"crack open","dug up":"dig up","pulled out":"pull out","have stolen":"have stolen","arrived":"arrive on a boat","fetched":"fetch","loaded":"load onto","lay down":"lie down","bury":"bury","grabbed":"grab","covered":"cover with"};
+function keyOf(typed){ const t=norm(typed); return Object.keys(RU).find(k=>RU[k].forms.some(f=>variants(f).includes(t))); }
+function gapComment(g){
+  const want=GAP_KEY[g.dataset.ans], typed=g.value.trim(), where=`«…${g.dataset.before} ___»`;
+  if(!typed) return `${where}: пропуск не заполнен. Нужно слово со значением «${RU[want].r}».`;
+  const k=keyOf(typed);
+  if(k===want) return `${where}: слово «${typed}» верное, но нужна другая форма. Посмотри, в каком времени рассказ.${RU[want].fr ? ' Подсказка: '+RU[want].fr+'.' : ''}`;
+  if(k) return `${where}: «${typed}» значит «${RU[k].r}». А здесь по смыслу нужно слово со значением «${RU[want].r}».`;
+  return `${where}: «${typed}» не подходит — проверь написание. Здесь нужно слово со значением «${RU[want].r}».`;
+}
+const norm = s => s.toLowerCase().replace(/[\u2010-\u2015]/g,'-').replace(/\s*-\s*/g,'-').replace(/\s+/g,' ').trim();
+function variants(ans){ const a=norm(ans); return [a, a.replace(/-/g,' ')]; }
+
+let lastGap = null;
+function buildContext(){
+  const host=document.getElementById('parts'); host.innerHTML='';
+  PARTS.forEach((p,pi)=>{
+    const answers=[]; 
+    const html = p.text.replace(/\[([^\]]+)\]/g,(m,ans)=>{
+      answers.push(ans);
+      const before = p.text.slice(0, p.text.indexOf('['+ans+']')).replace(/\[([^\]]+)\]/g,'$1').replace(/[\u2018\u2019'"]/g,'').trim().split(/\s+/).slice(-2).join(' ');
+      const w = Math.max(ans.length, 5) + 2;
+      return `<input class="gap" data-ans="${ans}" data-before="${before}" style="width:${w}ch" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="missing word">`;
+    });
+    const div=document.createElement('div'); div.className='part';
+    div.innerHTML = `<h3>${p.title}</h3><div class="bank"></div><p class="story">${html}</p>
+      <div class="part-ctrl"><button class="btn check">Check</button><button class="btn ghost reset">Start again</button><span class="result"></span></div><div class="fb" aria-live="polite"></div>`;
+    const bank=div.querySelector('.bank');
+    shuffle(answers).forEach(a=>{
+      const c=document.createElement('button'); c.className='chip'; c.textContent=a; c.dataset.word=a;
+      c.onclick=()=>{
+        const target = (lastGap && div.contains(lastGap) && !lastGap.classList.contains('ok')) ? lastGap
+          : [...div.querySelectorAll('.gap')].find(g=>!g.value && !g.classList.contains('ok'));
+        if(!target) return;
+        target.value=a; target.classList.remove('bad'); refreshBank(div); target.focus();
+      };
+      bank.appendChild(c);
+    });
+    div.querySelectorAll('.gap').forEach(g=>{
+      g.addEventListener('focus',()=>lastGap=g);
+      g.addEventListener('input',()=>{g.classList.remove('bad'); refreshBank(div);});
+    });
+    div.querySelector('.check').onclick=()=>{
+      let ok=0; const gaps=div.querySelectorAll('.gap');
+      gaps.forEach(g=>{
+        const good = variants(g.dataset.ans).includes(norm(g.value));
+        g.classList.toggle('ok',good); g.classList.toggle('bad',!good && g.value.trim()!=='');
+        if(good){ g.value=g.dataset.ans; g.readOnly=true; ok++; }
+      });
+      refreshBank(div);
+      div.querySelector('.result').textContent = ok===gaps.length ? `Все ${ok} верно!` : `Верно: ${ok} из ${gaps.length}. Исправь красные слова.`;
+      const fb=div.querySelector('.fb');
+      const wrong=[...gaps].filter(g=>!g.classList.contains('ok'));
+      if(!wrong.length){ fb.className='fb ok'; fb.textContent='Отлично! Все слова на месте.'; }
+      else { fb.className='fb bad'; fb.innerHTML='<ul></ul>'; wrong.forEach(g=>{ const li=document.createElement('li'); li.textContent=gapComment(g); fb.firstChild.appendChild(li); }); }
+    };
+    div.querySelector('.reset').onclick=()=>{
+      div.querySelectorAll('.gap').forEach(g=>{g.value=''; g.readOnly=false; g.classList.remove('ok','bad');});
+      div.querySelector('.result').textContent=''; const fb=div.querySelector('.fb'); fb.className='fb'; fb.textContent=''; refreshBank(div);
+    };
+    host.appendChild(div);
+  });
+}
+function refreshBank(div){
+  const used = [...div.querySelectorAll('.gap')].map(g=>norm(g.value));
+  div.querySelectorAll('.chip').forEach(c=>c.classList.toggle('used', used.includes(norm(c.dataset.word))));
+}
+buildContext();
+</script>
+</body>
+</html>
