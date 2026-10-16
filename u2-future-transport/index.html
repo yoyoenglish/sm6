@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+<meta charset="UTF-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Super Minds 6: Ways to travel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E4F3F1; --surface:#FFFFFF; --ink:#11323A; --muted:#4E6A70;
+  --sea:#0F6E78; --sea-deep:#0B4F57; --yellow:#FFC400; --yellow-soft:#FFE58A;
+  --ok:#2B8A3E; --ok-bg:#DDF5E2; --bad:#D6452B; --bad-bg:#FDE3DD; --line:#BFDCD8;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C2226; --surface:#133238; --ink:#EAF6F4; --muted:#A5C3C6;
+    --sea:#3BB3BC; --sea-deep:#7FD6DC; --yellow:#FFC400; --yellow-soft:#6B5A12;
+    --ok:#6FD68A; --ok-bg:#163D24; --bad:#FF8A72; --bad-bg:#4A1E16; --line:#24505A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C2226; --surface:#133238; --ink:#EAF6F4; --muted:#A5C3C6;
+  --sea:#3BB3BC; --sea-deep:#7FD6DC; --yellow:#FFC400; --yellow-soft:#6B5A12;
+  --ok:#6FD68A; --ok-bg:#163D24; --bad:#FF8A72; --bad-bg:#4A1E16; --line:#24505A;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Baloo 2", "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  font-size:18px; line-height:1.45;
+}
+.wrap{max-width:860px; margin:0 auto; padding:24px 16px 56px}
+header h1{margin:0; font-size:clamp(1.9rem,5vw,2.6rem); line-height:1.1; font-weight:800}
+header p{margin:.25rem 0 0; color:var(--muted)}
+
+/* yellow book-style tag */
+.tag{display:inline-flex; align-items:center; gap:.5rem}
+.tag .num{
+  width:2.1em; height:2.1em; border-radius:50%; flex:none;
+  background:#fff; color:#11323A; border:4px solid var(--yellow);
+  display:grid; place-items:center; font-weight:800; font-size:.9em;
+  position:relative; z-index:1;
+}
+.tag .lbl{background:var(--yellow); color:#11323A; padding:.05em .7em .05em .9em; margin-left:-1.2em; border-radius:0 8px 8px 0; font-weight:700}
+.tag .ul{font-weight:700; border-bottom:4px solid #6BDB4F; padding:0 .1em}
+
+nav{display:flex; gap:8px; margin:22px 0 18px; flex-wrap:wrap}
+nav button{
+  font:inherit; font-weight:700; font-size:1.05rem; cursor:pointer;
+  border:2px solid var(--sea); background:transparent; color:var(--sea-deep);
+  padding:.35em 1.1em; border-radius:999px;
+}
+nav button[aria-selected="true"]{background:var(--sea); color:#fff}
+button:focus-visible, input:focus-visible, .card:focus-visible{outline:3px solid var(--yellow); outline-offset:3px}
+
+section[hidden]{display:none}
+.hint{color:var(--muted); margin:0 0 14px}
+
+/* cards */
+.deck{display:flex; flex-direction:column; align-items:center; gap:16px}
+.card{
+  width:min(100%,520px); min-height:300px; perspective:1200px; cursor:pointer;
+  border:none; background:none; padding:0; font:inherit; color:inherit;
+}
+.card-inner{position:relative; width:100%; min-height:300px; transition:transform .45s ease; transform-style:preserve-3d}
+.card.flipped .card-inner{transform:rotateY(180deg)}
+.card.flipped .face.front, .card:not(.flipped) .face.back{pointer-events:none}
+.face{
+  position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  background:var(--surface); border:3px solid var(--line); border-radius:22px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center;
+}
+.face.front .tag{font-size:clamp(1.6rem,6vw,2.3rem)}
+.face.front small{margin-top:14px; color:var(--muted)}
+.say{
+  font:inherit; font-weight:700; cursor:pointer; margin-top:18px;
+  border:2px solid var(--sea); background:var(--surface); color:var(--sea-deep);
+  border-radius:999px; padding:.2em 1em; font-size:1rem;
+}
+.say.speaking{background:var(--yellow); border-color:var(--yellow); color:#11323A}
+.back-head{display:flex; align-items:center; gap:12px; margin:0 0 6px}
+.back-head h3{margin:0}
+.back-head .say{margin-top:0; padding:.1em .6em}
+.face.back{transform:rotateY(180deg); align-items:flex-start; text-align:left; border-color:var(--sea)}
+.face.back h3{margin:0 0 6px; font-size:1.5rem; color:var(--sea-deep)}
+.face.back .def{font-size:1.2rem; margin:0 0 12px}
+.face.back .ex{margin:0; color:var(--muted); font-style:italic}
+.face.back .form{margin:10px 0 0; font-size:.95rem; color:var(--muted)}
+.ru-btn{font:inherit; font-weight:700; cursor:pointer; margin-top:12px; border:2px solid var(--line); background:transparent; color:var(--muted); border-radius:999px; padding:.05em .9em; font-size:.95rem}
+.face.back .ru{margin:8px 0 0; font-size:1.05rem; color:var(--sea-deep)}
+.deck-ctrl{display:flex; align-items:center; gap:14px}
+.round{
+  font:inherit; font-weight:800; font-size:1.3rem; width:52px; height:52px; border-radius:50%;
+  border:2px solid var(--sea); background:var(--surface); color:var(--sea-deep); cursor:pointer;
+}
+.count{min-width:70px; text-align:center; font-weight:700}
+.btn{
+  font:inherit; font-weight:700; cursor:pointer; border-radius:12px; padding:.4em 1.1em;
+  border:2px solid var(--sea); background:var(--sea); color:#fff;
+}
+.btn.ghost{background:transparent; color:var(--sea-deep)}
+
+/* match */
+.match-top{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px}
+.score{font-weight:700}
+.cols{display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:12px}
+.col{display:flex; flex-direction:column; gap:10px}
+.tile{
+  font:inherit; text-align:left; cursor:pointer; color:var(--ink);
+  background:var(--surface); border:2px solid var(--line); border-radius:14px; padding:.55em .8em; line-height:1.3;
+}
+.tile.word{font-weight:700}
+.tile.sel{border-color:var(--yellow); background:var(--yellow-soft)}
+.tile.done{border-color:var(--ok); background:var(--ok-bg); cursor:default; opacity:.75}
+.tile.wrong{border-color:var(--bad); background:var(--bad-bg); animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.banner{margin-top:16px; padding:14px 16px; border-radius:14px; background:var(--ok-bg); border:2px solid var(--ok); font-weight:700; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
+
+/* context */
+.part{background:var(--surface); border:2px solid var(--line); border-radius:20px; padding:18px; margin-bottom:18px}
+.part h3{margin:0 0 10px}
+.bank{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px}
+.chip{
+  font:inherit; font-weight:700; cursor:pointer; border-radius:999px; padding:.1em .8em;
+  background:var(--yellow); color:#11323A; border:2px solid var(--yellow);
+}
+.chip.used{background:transparent; color:var(--muted); border-color:var(--line); text-decoration:line-through}
+.story{font-size:1.15rem; line-height:2.1; margin:0}
+.gap{
+  font:inherit; font-weight:700; color:var(--ink); background:var(--bg);
+  border:none; border-bottom:3px solid var(--sea); border-radius:6px 6px 0 0;
+  padding:0 .3em; text-align:center; max-width:100%;
+}
+.gap.ok{background:var(--ok-bg); border-color:var(--ok)}
+.gap.bad{background:var(--bad-bg); border-color:var(--bad)}
+.part-ctrl{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:14px}
+.result{font-weight:700}
+
+@media (max-width:560px){
+  .cols{grid-template-columns:1fr 1fr; gap:8px}
+  .tile{font-size:.95rem; padding:.45em .6em}
+}
+@media (prefers-reduced-motion: reduce){
+  .card-inner{transition:none}
+  .tile.wrong{animation:none}
+}
+</style>
+</head>
+<body class="notranslate">
+<div class="wrap">
+  <header>
+    <p>Super Minds 6</p>
+    <h1>Ways to travel</h1>
+  </header>
+
+  <nav role="tablist">
+    <button role="tab" aria-selected="true" data-tab="cards">Cards</button>
+    <button role="tab" aria-selected="false" data-tab="match">Match</button>
+    <button role="tab" aria-selected="false" data-tab="context">Fill in</button>
+  </nav>
+
+  <!-- CARDS -->
+  <section id="cards">
+    <p class="hint">Tap 🔊 to hear the word. Tap the card to see what it means. Use the arrows for the next word.</p>
+    <div class="deck">
+      <div class="card" id="card" role="button" tabindex="0" aria-label="Flashcard, tap to turn over">
+        <div class="card-inner">
+          <div class="face front"><div id="cardFront"></div><button class="say" data-say="front" aria-label="Listen to the word">🔊 Listen</button><small>Tap to turn over</small></div>
+          <div class="face back">
+            <div class="back-head"><h3 id="cardWord"></h3><button class="say" data-say="back" aria-label="Listen to the word">🔊</button></div>
+            <p class="def" id="cardDef"></p>
+            <p class="ex" id="cardEx"></p>
+            <p class="form" id="cardForm"></p>
+            <button class="ru-btn" id="ruBtn" aria-label="Show Russian translation">RU</button>
+            <p class="ru" id="cardRu" hidden></p>
+          </div>
+        </div>
+      </div>
+      <div class="deck-ctrl">
+        <button class="round" id="prev" aria-label="Previous word">&#8249;</button>
+        <span class="count" id="count"></span>
+        <button class="round" id="next" aria-label="Next word">&#8250;</button>
+      </div>
+      <button class="btn ghost" id="shuffleCards">Mix the cards</button>
+    </div>
+  </section>
+
+  <!-- MATCH -->
+  <section id="match" hidden>
+    <div class="match-top">
+      <p class="hint" style="margin:0">Tap a word, then tap its meaning.</p>
+      <span class="score" id="matchScore"></span>
+    </div>
+    <div class="cols">
+      <div class="col" id="colWords"></div>
+      <div class="col" id="colDefs"></div>
+    </div>
+    <div id="matchDone"></div>
+  </section>
+
+  <!-- CONTEXT -->
+  <section id="context" hidden>
+    <p class="hint">Read the story. Type the missing words or tap a gap and then a word from the box.</p>
+    <div id="parts"></div>
+  </section>
+</div>
+
+<script>
+const WORDS = [
+  {w:"hang-glider", n:1, d:"A big wing with no engine. A person holds on under it and flies from a hill or a cliff.", r:"Большое крыло без мотора. Человек держится под ним и летит с холма или скалы.", s:"a big wing with no engine, you fly from a hill", ex:"He jumped off the cliff and flew over the sea on his hang-glider."},
+  {w:"parachute", n:2, d:"A big piece of cloth that opens in the sky. It helps a person come down slowly from a plane.", r:"Большой кусок ткани, который раскрывается в небе. Он помогает человеку медленно спуститься с самолёта.", s:"cloth that opens in the sky so you come down slowly", ex:"The man jumped out of the plane and his parachute opened."},
+  {w:"monorail", n:3, d:"A train that goes along only one track. The track is often high above the street.", r:"Поезд, который едет только по одному пути. Этот путь часто проходит высоко над улицей.", s:"a train that goes along one track high above the street", ex:"We took the monorail from the airport to the city centre."},
+  {w:"solar panel", n:4, d:"A flat thing, often on a roof. It makes electricity from the light of the sun.", r:"Плоская штука, часто на крыше. Она делает электричество из света солнца.", s:"a flat thing that makes electricity from the sun", ex:"Our school has a solar panel on the roof."},
+  {w:"microlight", n:5, d:"A very small plane with a tiny engine. It carries one or two people.", r:"Очень маленький самолёт с крошечным мотором. Он везёт одного или двух человек.", s:"a very small plane for one or two people", ex:"My uncle flies a microlight over the fields on Sundays."},
+  {w:"wind turbine", n:6, d:"A very tall tower with big blades. When the air moves, the blades go round and make electricity.", r:"Очень высокая башня с большими лопастями. Когда движется воздух, лопасти крутятся и делают электричество.", s:"a tall tower with blades that go round and make electricity", ex:"There is a wind turbine on the hill near our village."},
+  {w:"cable car", n:7, d:"A small cabin that hangs from a strong metal rope. It takes people up and down a mountain.", r:"Маленькая кабина, которая висит на прочном металлическом тросе. Она возит людей вверх и вниз по горе.", s:"a cabin on a metal rope that takes people up a mountain", ex:"We went up the mountain in a cable car."},
+  {w:"jet pack", n:8, d:"A machine that you wear on your back like a bag. It lets you fly.", r:"Машина, которую носят на спине, как сумку. Она позволяет летать.", s:"a machine on your back that lets you fly", ex:"In the future, maybe we will fly to school with a jet pack!"},
+  {w:"surfboard", n:9, d:"A long, flat piece of wood or plastic. You stand on it and ride the waves in the sea.", r:"Длинный плоский кусок дерева или пластика. На нём стоят и катаются на волнах в море.", s:"you stand on it and ride the waves", ex:"She carried her surfboard to the beach."},
+  {w:"inline skates", n:10, d:"Boots with four small wheels, one behind the other. You wear them to move fast.", r:"Ботинки с четырьмя маленькими колёсами, одно за другим. В них быстро катаются.", s:"boots with small wheels, one behind the other", ex:"I put on my inline skates and went to the park."},
+  {w:"unicycle", n:11, d:"It's like a bike, but it has only one wheel. It's very hard to ride!", r:"Это как велосипед, но у него только одно колесо. На нём очень трудно ездить!", s:"like a bike, but with only one wheel", ex:"The clown rode a unicycle in the circus."},
+  {w:"floating skateboard", n:12, d:"A flat thing with no wheels. You stand on it and it flies a little above the ground.", r:"Плоская штука без колёс. На ней стоят, и она летит чуть-чуть над землёй.", s:"it has no wheels and flies a little above the ground", ex:"I want a floating skateboard for my birthday!"}
+];
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function tagHTML(o){
+  return o.n ? `<span class="tag"><span class="num">${o.n}</span><span class="lbl">${o.w}</span></span>`
+             : `<span class="tag"><span class="ul">${o.w}</span></span>`;
+}
+
+/* tabs */
+document.querySelectorAll('nav button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected', x===b));
+    ['cards','match','context'].forEach(id=>document.getElementById(id).hidden = id!==b.dataset.tab);
+  });
+});
+
+/* cards */
+let deck = WORDS.slice(), idx = 0;
+const card = document.getElementById('card');
+function showCard(){
+  const o = deck[idx];
+  card.classList.remove('flipped');
+  document.getElementById('cardFront').innerHTML = tagHTML(o);
+  document.getElementById('cardWord').textContent = o.w;
+  document.getElementById('cardDef').textContent = o.d;
+  document.getElementById('cardEx').textContent = o.ex;
+  document.getElementById('cardForm').textContent = o.f || '';
+  const ru=document.getElementById('cardRu'); ru.textContent = o.r; ru.hidden = true;
+  document.getElementById('count').textContent = (idx+1) + ' / ' + deck.length;
+}
+/* audio: browser speech synthesis, British English voice preferred (Super Minds is British English) */
+let voice = null;
+function pickVoice(){
+  const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [];
+  voice = vs.find(v=>v.lang==='en-GB') || vs.find(v=>/^en[-_]GB/i.test(v.lang)) || vs.find(v=>/^en/i.test(v.lang)) || null;
+}
+if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function say(text, btn){
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = voice ? voice.lang : 'en-GB'; if(voice) u.voice = voice; u.rate = 0.85;
+  if(btn){ btn.classList.add('speaking'); u.onend = u.onerror = ()=>btn.classList.remove('speaking'); }
+  speechSynthesis.speak(u);
+}
+document.querySelectorAll('.say').forEach(b=>{
+  if(!('speechSynthesis' in window)) { b.hidden = true; return; }
+  b.addEventListener('click',e=>{ e.stopPropagation(); say(deck[idx].w, b); });
+  b.addEventListener('keydown',e=>e.stopPropagation());
+});
+const ruBtn=document.getElementById('ruBtn');
+ruBtn.addEventListener('click',e=>{ e.stopPropagation(); const ru=document.getElementById('cardRu'); ru.hidden=!ru.hidden; });
+ruBtn.addEventListener('keydown',e=>e.stopPropagation());
+card.addEventListener('click',()=>card.classList.toggle('flipped'));
+card.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); card.classList.toggle('flipped'); } });
+document.getElementById('prev').addEventListener('click',()=>{idx=(idx-1+deck.length)%deck.length; showCard();});
+document.getElementById('next').addEventListener('click',()=>{idx=(idx+1)%deck.length; showCard();});
+document.getElementById('shuffleCards').addEventListener('click',()=>{deck=shuffle(WORDS); idx=0; showCard();});
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('cards').hidden) return;
+  if(e.key==='ArrowRight') document.getElementById('next').click();
+  if(e.key==='ArrowLeft') document.getElementById('prev').click();
+});
+showCard();
+
+/* match: two rounds of 6 */
+let rounds=[], round=0, selWord=null, selDef=null, matched=0, mistakes=0;
+function newMatch(){
+  const all = shuffle(WORDS);
+  rounds = [all.slice(0,6), all.slice(6)];
+  round = 0; mistakes = 0; startRound();
+}
+function startRound(){
+  matched = 0; selWord = selDef = null;
+  const set = rounds[round];
+  const cw = document.getElementById('colWords'), cd = document.getElementById('colDefs');
+  cw.innerHTML=''; cd.innerHTML=''; document.getElementById('matchDone').innerHTML='';
+  shuffle(set).forEach(o=>{
+    const t=document.createElement('button'); t.className='tile word'; t.textContent=o.w; t.dataset.key=o.w;
+    t.onclick=()=>pick(t,'w'); cw.appendChild(t);
+  });
+  shuffle(set).forEach(o=>{
+    const t=document.createElement('button'); t.className='tile'; t.textContent=o.s; t.dataset.key=o.w;
+    t.onclick=()=>pick(t,'d'); cd.appendChild(t);
+  });
+  updateScore();
+}
+function updateScore(){
+  document.getElementById('matchScore').textContent = `Round ${round+1} of 2: ${matched} / ${rounds[round].length}`;
+}
+function pick(t,type){
+  if(t.classList.contains('done')) return;
+  if(type==='w'){ if(selWord) selWord.classList.remove('sel'); selWord=t; }
+  else { if(selDef) selDef.classList.remove('sel'); selDef=t; }
+  t.classList.add('sel');
+  if(selWord && selDef){
+    const a=selWord, b=selDef; selWord=selDef=null;
+    a.classList.remove('sel'); b.classList.remove('sel');
+    if(a.dataset.key===b.dataset.key){
+      a.classList.add('done'); b.classList.add('done'); a.disabled=b.disabled=true; matched++; updateScore();
+      if(matched===rounds[round].length) roundDone();
+    } else {
+      mistakes++;
+      a.classList.add('wrong'); b.classList.add('wrong');
+      setTimeout(()=>{a.classList.remove('wrong'); b.classList.remove('wrong');},450);
+    }
+  }
+}
+function roundDone(){
+  const box=document.getElementById('matchDone');
+  if(round===0){
+    box.innerHTML=`<div class="banner"><span>Round 1 done! Well done!</span><button class="btn" id="nextRound">Next round</button></div>`;
+    document.getElementById('nextRound').onclick=()=>{round=1; startRound();};
+  } else {
+    box.innerHTML=`<div class="banner"><span>All 12 words matched! Mistakes: ${mistakes}</span><button class="btn" id="again">Play again</button></div>`;
+    document.getElementById('again').onclick=newMatch;
+  }
+}
+newMatch();
+
+/* context */
+const PARTS = [
+  {title:"Part 1: A day at Future Park",
+   text:"Last summer Mia visited Future Park. First she went on the [monorail]. It went high above the trees on one track. From the window she saw a man jump out of a plane. His purple [parachute] opened and he came down slowly. Another man flew from a hill on a [hang-glider]. It had no engine! Then a small [microlight] with a noisy engine flew over the lake. Every building in the park had a [solar panel] on its roof, and on the hill there was a tall [wind turbine]. It made electricity for the whole park."},
+  {title:"Part 2: More fun",
+   text:"After lunch Mia took the [cable car] up the mountain. At the top there was a big wave pool, and her brother rode the waves on his [surfboard]. Her friend Leo can ride a [unicycle]. It has only one wheel! Mia put on her [inline skates] and skated around the park. Then she saw a boy fly over the people with a [jet pack] on his back. \"In the future, I want a [floating skateboard],\" said Mia. \"No wheels. It just flies above the ground!\""}
+];
+const norm = s => s.toLowerCase().replace(/[\u2010-\u2015]/g,'-').replace(/\s*-\s*/g,'-').replace(/\s+/g,' ').trim();
+function variants(ans){ const a=norm(ans); return [a, a.replace(/-/g,' ')]; }
+
+let lastGap = null;
+function buildContext(){
+  const host=document.getElementById('parts'); host.innerHTML='';
+  PARTS.forEach((p,pi)=>{
+    const answers=[]; 
+    const html = p.text.replace(/\[([^\]]+)\]/g,(m,ans)=>{
+      answers.push(ans);
+      const w = Math.max(ans.length, 5) + 2;
+      return `<input class="gap" data-ans="${ans}" style="width:${w}ch" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="missing word">`;
+    });
+    const div=document.createElement('div'); div.className='part';
+    div.innerHTML = `<h3>${p.title}</h3><div class="bank"></div><p class="story">${html}</p>
+      <div class="part-ctrl"><button class="btn check">Check</button><button class="btn ghost reset">Start again</button><span class="result"></span></div>`;
+    const bank=div.querySelector('.bank');
+    shuffle(answers).forEach(a=>{
+      const c=document.createElement('button'); c.className='chip'; c.textContent=a; c.dataset.word=a;
+      c.onclick=()=>{
+        const target = (lastGap && div.contains(lastGap) && !lastGap.classList.contains('ok')) ? lastGap
+          : [...div.querySelectorAll('.gap')].find(g=>!g.value && !g.classList.contains('ok'));
+        if(!target) return;
+        target.value=a; target.classList.remove('bad'); refreshBank(div); target.focus();
+      };
+      bank.appendChild(c);
+    });
+    div.querySelectorAll('.gap').forEach(g=>{
+      g.addEventListener('focus',()=>lastGap=g);
+      g.addEventListener('input',()=>{g.classList.remove('bad'); refreshBank(div);});
+    });
+    div.querySelector('.check').onclick=()=>{
+      let ok=0; const gaps=div.querySelectorAll('.gap');
+      gaps.forEach(g=>{
+        const good = variants(g.dataset.ans).includes(norm(g.value));
+        g.classList.toggle('ok',good); g.classList.toggle('bad',!good && g.value.trim()!=='');
+        if(good){ g.value=g.dataset.ans; g.readOnly=true; ok++; }
+      });
+      refreshBank(div);
+      div.querySelector('.result').textContent = ok===gaps.length ? `All ${ok} correct!` : `${ok} / ${gaps.length} correct. Fix the red words.`;
+    };
+    div.querySelector('.reset').onclick=()=>{
+      div.querySelectorAll('.gap').forEach(g=>{g.value=''; g.readOnly=false; g.classList.remove('ok','bad');});
+      div.querySelector('.result').textContent=''; refreshBank(div);
+    };
+    host.appendChild(div);
+  });
+}
+function refreshBank(div){
+  const used = [...div.querySelectorAll('.gap')].map(g=>norm(g.value));
+  div.querySelectorAll('.chip').forEach(c=>c.classList.toggle('used', used.includes(norm(c.dataset.word))));
+}
+buildContext();
+</script>
+</body>
+</html>
